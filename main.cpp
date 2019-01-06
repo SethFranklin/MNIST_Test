@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <string.h>
+#include <algorithm>
+#include <vector>
+#include <math.h>
 
 typedef unsigned char byte;
 
@@ -42,13 +44,18 @@ Image TrainingImages[NUM_IMAGES_TO_TRAIN];
 void ConsoleOutputImage(Image ToDraw)
 {
 
+	byte n;
+
 	for (int y = 0; y < IMAGE_HEIGHT; y++)
 	{
 
 		for (int x = 0; x < IMAGE_WIDTH; x++)
 		{
 
-			if (ToDraw.ImageData[(IMAGE_WIDTH * y) + x] > 100) std::cout << "▓";
+			n = ToDraw.ImageData[(IMAGE_WIDTH * y) + x];
+			if (n > 200) std::cout << "▓";
+			else if (n > 150) std::cout << "▒";
+			else if (n > 100) std::cout << "░";
 			else std::cout << " ";
 
 		}
@@ -61,6 +68,40 @@ void ConsoleOutputImage(Image ToDraw)
 
 }
 
+double Sigmoid(double x)
+{
+
+	return 1.0 / (1 + exp(-x));
+
+}
+
+struct Network
+{
+
+	int NumTrained;
+	int NumHiddenLayers;
+	int NumNeurons; // neurons per hidden layer
+
+	int NumConstants;
+
+	std::vector<double> Constants;
+
+	Network(int numlayers, int numneurons)
+	{
+
+		NumHiddenLayers = numlayers;
+		NumNeurons = numneurons;
+
+		NumConstants = 4;
+
+		Constants = std::vector<double>(NumConstants);
+
+	}
+
+	Network() {}
+
+};
+
 int main()
 {
 
@@ -71,6 +112,7 @@ int main()
 	{
 
 		ImageStream.read(ImageBuffer, (NUM_IMAGES_TO_TRAIN * IMAGE_WIDTH * IMAGE_HEIGHT) + IMAGE_OFFSET);
+		ImageStream.close();
 
 	}
 	else std::cout << "Couldn't read " + TRAIN_IMAGE_FILE << std::endl;
@@ -82,6 +124,7 @@ int main()
 	{
 
 		LabelStream.read(LabelBuffer, NUM_IMAGES_TO_TRAIN + LABEL_OFFSET);
+		LabelStream.close();
 
 	}
 	else std::cout << "Couldn't read " + TRAIN_LABEL_FILE << std::endl;
@@ -93,7 +136,7 @@ int main()
 
 	}
 
-	for (int i = 0; i < 10; i++) ConsoleOutputImage(TrainingImages[i]);
+	for (int i = 70; i < 100; i++) ConsoleOutputImage(TrainingImages[i]);
 
 	delete[] ImageBuffer;
 	delete[] LabelBuffer;
