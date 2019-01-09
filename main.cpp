@@ -13,7 +13,7 @@
 typedef unsigned char byte;
 
 const int NUM_TRAINING_IMAGES = 60000;
-const int NUM_TESTING_IMAGES = 10000;
+const int NUM_TESTING_IMAGES = 5000;
 
 const int IMAGE_OFFSET = 16;
 const int LABEL_OFFSET = 8;
@@ -437,14 +437,14 @@ int main()
 	delete[] ImageBuffer;
 	delete[] LabelBuffer;
 
-	Network test = Network(2, 16, 0.1, 1.0);
+	Network test = Network(2, 16, 0.01, 1.0);
 
 	std::chrono::high_resolution_clock::time_point t1;
 	std::chrono::high_resolution_clock::time_point t2;
 
 	t1 = std::chrono::high_resolution_clock::now();
 
-	GradientDescent(&test, 900); // training
+	GradientDescent(&test, 1800); // training
 
 	t2 = std::chrono::high_resolution_clock::now();
 
@@ -461,7 +461,7 @@ int main()
 
 		result = EvaluateNetwork(&test, &TestingImages[j], -1);
 
-		if (j == 0)
+		if (j < 20)
 		{
 
 			ConsoleOutputImage(&TestingImages[j]);
