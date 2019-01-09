@@ -444,7 +444,7 @@ int main()
 
 	t1 = std::chrono::high_resolution_clock::now();
 
-	GradientDescent(&test, 1800); // training
+	GradientDescent(&test, 5000); // training
 
 	t2 = std::chrono::high_resolution_clock::now();
 
@@ -497,6 +497,20 @@ int main()
 	for (int i = 0; i < 10; i++) std::cout << i << ": " << predict_distribution[i] << std::endl;
 
 	std::cout << "Elapsed time: " << std::chrono::duration<double>(t2 - t1).count() << " sec" << std::endl;
+
+	std::ofstream o("constants");
+
+	if (o.is_open())
+	{
+
+		for (int i = 0; i < test.NumConstants; i++) o << test.Constants[i] << ",";
+
+		o.close();
+
+		std::cout << "Saved constants to file" << std::endl;
+
+	}
+	else std::cout << "Unable to write to file" << std::endl;
 
 	return 0;
 
