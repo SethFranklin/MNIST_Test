@@ -503,7 +503,11 @@ int main()
 	if (o.is_open())
 	{
 
-		for (int i = 0; i < test.NumConstants; i++) o << test.Constants[i] << ",";
+		o << "[";
+
+		for (int i = 0; i < test.NumConstants - 1; i++) o << test.Constants[i] << ",";
+
+		o << test.Constants[test.NumConstants - 1] << "]";
 
 		o.close();
 
